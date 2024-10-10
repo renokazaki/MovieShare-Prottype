@@ -16,25 +16,6 @@ interface Movie {
 const MovieContents = () => {
   const [MovieData, setMovieData] = useState<Movie[]>([]);
 
-  //Movieデータ取得function
-  //(2)promise.allについてメモあり
-  const getMovieData = async () => {
-    //supabaseよりレコードの配列を取得
-    const movie = await getMovie();
-    if (movie.data) {
-      // 各動画のタイトルと著者名を取得してMovieDataを更新する
-      const updatedMovies = await Promise.all(
-        movie.data.map(async (movie: Movie) => {
-          const oEmbedData = await fetchOEmbedData(movie.url); // 各URLに対してoEmbedデータを取得。タイトルと投稿者が返ってくる
-          return { ...movie, ...oEmbedData }; // Movieオブジェクトにタイトルと著者の情報も追加
-        })
-      );
-      setMovieData(updatedMovies); //追加された新しい情報
-    } else {
-      console.error("Supabaseから動画データが取得できませんでした");
-    }
-  };
-
   //動画情報取得用関数
   //以下URLに動画のURLを差し込むと情報を取得できる
   //今回はタイトルと投稿者を取得しリターンする
@@ -53,6 +34,25 @@ const MovieContents = () => {
 
   //画面表示時に動画を表示するため
   useEffect(() => {
+    //Movieデータ取得function
+    //(2)promise.allについてメモあり
+    const getMovieData = async () => {
+      //supabaseよりレコードの配列を取得
+      const movie = await getMovie();
+      if (movie.data) {
+        // 各動画のタイトルと著者名を取得してMovieDataを更新する
+        const updatedMovies = await Promise.all(
+          movie.data.map(async (movie: Movie) => {
+            const oEmbedData = await fetchOEmbedData(movie.url); // 各URLに対してoEmbedデータを取得。タイトルと投稿者が返ってくる
+            return { ...movie, ...oEmbedData }; // Movieオブジェクトにタイトルと著者の情報も追加
+          })
+        );
+        setMovieData(updatedMovies); //追加された新しい情報
+      } else {
+        console.error("Supabaseから動画データが取得できませんでした");
+      }
+    };
+
     getMovieData();
   }, []);
 
