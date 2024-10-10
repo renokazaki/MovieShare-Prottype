@@ -1,7 +1,7 @@
 import dynamic from "next/dynamic";
 
 const DynamicMovieContents = dynamic(
-  () => import("../app/components/MovieContents"),
+  () => import("./myComponents/MovieContents"),
   { ssr: false }
   //memoに経緯残している。(1)
   //ハイドレーションエラー回避の為
@@ -10,11 +10,6 @@ const DynamicMovieContents = dynamic(
 export default function Home() {
   return (
     <>
-      <DynamicMovieContents />
-      <DynamicMovieContents />
-      <DynamicMovieContents />
-      <DynamicMovieContents />
-      <DynamicMovieContents />
       <DynamicMovieContents />
     </>
   );
